@@ -1,0 +1,289 @@
+#This script is property of Dr. Jill A. Kreiling and Amy E. Elias
+#This script was created by Amy E. Elias with help from CCV @ Brown University and suggestions from the Brown Computational Biology Core
+#This code is not concise.  There are many areas that could be more concise through use of loops or additional options in bedtools.  This was done stepwise because Amy E. Elias was relearning a lot of coding////trying stuff out when making this reference to make sure everything checked out. This was done stepwise.
+#This script along with manual manipulation and manipulation on UCSC were used to create a primary miRNA reference to use with single-nuclei RNA-sequencing data.  This script used 15 samples (bam files) from Amy Elias' single-nuclei RNA-sequencing data set of young and old SVZ to overlap with Joshua Mendell's primary miRNA sequencing data from 6 cell lines to create a compatible reference with brain. 
+
+
+module load bedtools
+module load samtools
+module load bedops
+
+#The mendell_lab.bed file was downloaded off of ucsc: it is available here http://www4.utsouthwestern.edu/mendell-lab/resources.html
+#Split bam files into mapped and unmapped read bam files
+
+cd /users/aelias1/data/SVZ_SingleCell_BamFiles_premrnaalignment
+
+samtools view -b -F 4 YM1_possortedgenome.bam > YM1_mapped.bam
+samtools view -b -f 4 YM1_possortedgenome.bam > YM1_unmapped.bam
+
+samtools view -b -F 4 YM2_possortedgenome.bam > YM2_mapped.bam
+samtools view -b -f 4 YM2_possortedgenome.bam > YM2_unmapped.bam
+
+samtools view -b -F 4 YM3_possortedgenome.bam > YM3_mapped.bam
+samtools view -b -f 4 YM3_possortedgenome.bam > YM3_unmapped.bam
+
+samtools view -b -F 4 YM4_possortedgenome.bam > YM4_mapped.bam
+samtools view -b -f 4 YM4_possortedgenome.bam > YM4_unmapped.bam
+
+samtools view -b -F 4 OM1_possortedgenome.bam > OM1_mapped.bam
+samtools view -b -f 4 OM1_possortedgenome.bam > OM1_unmapped.bam
+
+samtools view -b -F 4 OM2_possortedgenome.bam > OM2_mapped.bam
+samtools view -b -f 4 OM2_possortedgenome.bam > OM2_unmapped.bam
+
+samtools view -b -F 4 OM3_possortedgenome.bam > OM3_mapped.bam
+samtools view -b -f 4 OM3_possortedgenome.bam > OM3_unmapped.bam
+
+samtools view -b -F 4 OM4_possortedgenome.bam > OM4_mapped.bam
+samtools view -b -f 4 OM4_possortedgenome.bam > OM4_unmapped.bam
+
+samtools view -b -F 4 OF5_possortedgenome.bam > OF5_mapped.bam
+samtools view -b -f 4 OF5_possortedgenome.bam > OF5_unmapped.bam
+
+samtools view -b -F 4 OF6_possortedgenome.bam > OF6_mapped.bam
+samtools view -b -f 4 OF6_possortedgenome.bam > OF6_unmapped.bam
+
+samtools view -b -F 4 OF7_possortedgenome.bam > OF7_mapped.bam
+samtools view -b -f 4 OF7_possortedgenome.bam > OF7_unmapped.bam
+
+samtools view -b -F 4 OF8_possortedgenome.bam > OF8_mapped.bam
+samtools view -b -f 4 OF8_possortedgenome.bam > OF8_unmapped.bam
+
+samtools view -b -F 4 YF5_possortedgenome.bam > YF5_mapped.bam
+samtools view -b -f 4 YF5_possortedgenome.bam > YF5_unmapped.bam
+
+samtools view -b -F 4 YF6_possortedgenome.bam > YF6_mapped.bam
+samtools view -b -f 4 YF6_possortedgenome.bam > YF6_unmapped.bam
+
+samtools view -b -F 4 YF7_possortedgenome.bam > YF7_mapped.bam
+samtools view -b -f 4 YF7_possortedgenome.bam > YF7_unmapped.bam
+
+
+#Convert bams into bed files 
+
+bedtools bamtobed -bedpe -i YM1_mapped.bam >  YM1_mapped.bed
+bedtools bamtobed -bedpe -i YM1_unmapped.bam >  YM1_unmapped.bed
+
+bedtools bamtobed -bedpe -i YM2_mapped.bam >  YM2_mapped.bed
+bedtools bamtobed -bedpe -i YM2_unmapped.bam >  YM2_unmapped.bed
+
+bedtools bamtobed -bedpe -i YM3_mapped.bam >  YM3_mapped.bed
+bedtools bamtobed -bedpe -i YM3_unmapped.bam >  YM3_unmapped.bed
+
+bedtools bamtobed -bedpe -i YM4_mapped.bam >  YM4_mapped.bed
+bedtools bamtobed -bedpe -i YM4_unmapped.bam >  YM4_unmapped.bed
+
+bedtools bamtobed -bedpe -i YF5_mapped.bam >  YF5_mapped.bed
+bedtools bamtobed -bedpe -i YF5_unmapped.bam >  YF5_unmapped.bed
+
+bedtools bamtobed -bedpe -i YF6_mapped.bam >  YF6_mapped.bed
+bedtools bamtobed -bedpe -i YF6_unmapped.bam >  YF6_unmapped.bed
+
+bedtools bamtobed -bedpe -i YF7_mapped.bam >  YF7_mapped.bed
+bedtools bamtobed -bedpe -i YF7_unmapped.bam >  YF7_unmapped.bed
+
+bedtools bamtobed -bedpe -i OF5_mapped.bam >  OF5_mapped.bed
+bedtools bamtobed -bedpe -i OF5_unmapped.bam >  OF5_unmapped.bed
+
+bedtools bamtobed -bedpe -i OF6_mapped.bam >  OF6_mapped.bed
+bedtools bamtobed -bedpe -i OF6_unmapped.bam >  OF6_unmapped.bed
+
+bedtools bamtobed -bedpe -i OF7_mapped.bam >  OF7_mapped.bed
+bedtools bamtobed -bedpe -i OF7_unmapped.bam >  OF7_unmapped.bed
+
+bedtools bamtobed -bedpe -i OF8_mapped.bam >  OF8_mapped.bed
+bedtools bamtobed -bedpe -i OF8_unmapped.bam >  OF8_unmapped.bed
+
+bedtools bamtobed -bedpe -i OM1_mapped.bam >  OM1_mapped.bed
+bedtools bamtobed -bedpe -i OM1_unmapped.bam >  OM1_unmapped.bed
+
+
+bedtools bamtobed -bedpe -i OM2_mapped.bam >  OM2_mapped.bed
+bedtools bamtobed -bedpe -i OM2_unmapped.bam >  OM2_unmapped.bed
+
+
+bedtools bamtobed -bedpe -i OM3_mapped.bam >  OM3_mapped.bed
+bedtools bamtobed -bedpe -i OM3_unmapped.bam >  OM3_unmapped.bed
+
+
+bedtools bamtobed -bedpe -i OM4_mapped.bam >  OM4_mapped.bed
+bedtools bamtobed -bedpe -i OM4_unmapped.bam >  OM4_unmapped.bed
+
+#Intersect each file with the mendell lab data to then see where our data overlaps with primary miRNA sequences
+
+bedtools intersect -a mendell_lab.bed -b YM1_mapped.bed > overlap_mendell_YM1Mapped.bed
+bedtools intersect -a YM4_mapped.chromlabel.bed -b mendell_lab.bed> YM4_mapped_bedoverlap_mendell.bed
+bedtools intersect -a OM1_mapped.chromlabel.bed -b mendell_lab.bed> OM1_mapped_bedoverlap_mendell.bed
+bedtools intersect -a OM2_mapped.chromlabel.bed -b mendell_lab.bed> OM2_mapped_bedoverlap_mendell.bed
+bedtools intersect -a OM3_mapped.chromlabel.bed -b mendell_lab.bed> OM3_mapped_bedoverlap_mendell.bed
+bedtools intersect -a OM4_mapped.chromlabel.bed -b mendell_lab.bed> OM4_mapped_bedoverlap_mendell.bed
+bedtools intersect -a OF5_mapped.chromlabel.bed -b mendell_lab.bed> OF5_mapped_bedoverlap_mendell.bed
+bedtools intersect -a OF6_mapped.chromlabel.bed -b mendell_lab.bed> OF6_mapped_bedoverlap_mendell.bed
+bedtools intersect -a OF7_mapped.chromlabel.bed -b mendell_lab.bed> OF7_mapped_bedoverlap_mendell.bed
+bedtools intersect -a OF8_mapped.chromlabel.bed -b mendell_lab.bed> OF8_mapped_bedoverlap_mendell.bed
+bedtools intersect -a YF5_mapped.chromlabel.bed -b mendell_lab.bed> YF5_mapped_bedoverlap_mendell.bed
+bedtools intersect -a YF6_mapped.chromlabel.bed -b mendell_lab.bed> YF6_mapped_bedoverlap_mendell.bed
+
+#YF7 excluded because it did not create proper mapped/unmapped files. It was not needed for the rest of this process since n=2 of YF
+#This line of code combines all of the overlap files into one file
+
+cat overlap_mendell_YM1Mapped.bed YM2_mapped_bedoverlap_mendell.bed YM3_mapped_bedoverlap_mendell.bed YM4_mapped_bedoverlap_mendell.bed OM1_mapped_bedoverlap_mendell.bed OM2_mapped_bedoverlap_mendell.bed OM3_mapped_bedoverlap_mendell.bed OM4_mapped_bedoverlap_mendell.bed OF5_mapped_bedoverlap_mendell.bed OF6_mapped_bedoverlap_mendell.bed OF7_mapped_bedoverlap_mendell.bed OF8_mapped_bedoverlap_mendell.bed YF5_mapped_bedoverlap_mendell.bed YF6_mapped_bedoverlap_mendell.bed > AllData_exceptYF7_bedoverlap_mendell_concat.bed
+
+# A lot of reordering of the columns needed to be done at this point in time.  That is what is done with the code below 
+
+
+awk -F, -v OFS='' '{print $1,$2,$3,$4,$8,$5,$6,$7}' AllData_sorted_noYF7_bedoverlapmendell.bed 
+awk '{ print $1 " " $2, $3, $4, $9, $5, $6, $7, $8}' AllData_sorted_noYF7_bedoverlapmendell.bed > Corrected_overlap_mendell_noyf7.bed
+sed 's/$/ 1000/' Corrected_overlap_mendell_noyf7.bed  > Corrected_overlap_mendell_noyf7_1.bed
+awk '{ print $1 " " $2, $3, $4, $10, $5, $6, $7, $8, $9}'  Corrected_overlap_mendell_noyf7_1.bed > ReorderedBed_MendellOverlap_AllexceptYF7.bed
+
+awk '{ print $1 " " $2, $3, $4, $5, $6, $10}'  ReorderedBed_MendellOverlap_AllexceptYF7.bed > Mendell_overlap_noYF7_nothickstartsends.bed
+
+#We needed the no thick ends file in order to upload to UCSC at the moment. 
+#Mendell_overlap_noYF7_nothickstartsends.bed was uploaded to UCSC and the bed was redownloaded as AllData_sorted_noYF7_bedoverlapmendell_1.bed
+#We downloaded the mmu_maturemiRNA.bed file as a gff3 from miRbase.com this was uploaded to UCSC to receive the bed file.  The bed file then gave us the information necessary to tell the computer that when a miRNA is near one of our overlap coordinates name that coordinate the miRNA accession value given by that mmu document 
+
+#The files must be sorted before being put in to bedops
+bedtools sort -i mmu_maturemiRNA.bed > mmu_maturemiRNA_sortSep9.bed
+bedtools sort -i AllData_sorted_noYF7_bedoverlapmendell_1.bed > AllData_sorted_noYF7_bedoverlapmendell_sort_sep9.bed
+
+#This line of code uses bedops to find where our data overlaps with mature miRNA annotation within 200bp and transfer the name of that miRNA within 200bp to our file
+bedmap --range 200 --echo --echo-map-id-uniq AllData_sorted_noYF7_bedoverlapmendell_sort_sep9.bed mmu_maturemiRNA_sortSep9.bed > AnnotatedmirBase_mendelloverlapSVZ_noYF7_sep9.bed
+
+#Columns are rearranged here
+awk '{ print $1, $2, $3, $9, $8}' AnnotatedmirBase_mendelloverlapSVZ_noYF7_sep9.bed > AnnotatedmirBase_mendelloverlapSVZ_noYF7_reorder1_sep9.bed
+
+head AnnotatedmirBase_mendelloverlapSVZ_noYF7_reorder1_sep9.bed 
+
+
+awk '{sub(/\|.*$/,"",$4); print $1, $2, $3, $4, $5}' AnnotatedmirBase_mendelloverlapSVZ_noYF7_reorder1_sep9.bed > AllExceptmiRnames_sep9.bed
+
+awk '{ print $4}' AnnotatedmirBase_mendelloverlapSVZ_noYF7_reorder1_sep9.bed  > Justmirbase_sep9.bed
+
+head Justmirbase_sep9.bed
+
+cat Justmirbase_sep9.bed | sed 's/^..//' > Justmirbase1_sep9.bed
+
+head Justmirbase1_sep9.bed
+
+
+paste  AllExceptmiRnames_sep9.bed Justmirbase1_sep9.bed > CorrectedBedmirbase_Annotated_MendellOverlapSVZ_NoYF7_reorder1_sep9.bed 
+
+
+awk '!$6{$6=1}1' CorrectedBedmirbase_Annotated_MendellOverlapSVZ_NoYF7_reorder1_sep9.bed > OutofOrder_FinalAnnotation_mirbase_sep9.bed
+
+awk '{print $1,$2,$3,$6,$5,$4 }' OutofOrder_FinalAnnotation_mirbase_sep9.bed >CorrectedBedmirbase_Annotated_MendellOverlapSVZ_NoYF7_reorder1_sep9.bed 
+
+cp CorrectedBedmirbase_Annotated_MendellOverlapSVZ_NoYF7_reorder1_sep9.bed SVZOverlapMendellMirbase_Annotated_NoYF7_finalSep9.bed
+
+sort -k 1,1n -k 2,2n -k 4,4n -i SVZ_OverlapMendellmiRBasae_Annotated_sep9_ucsc.bed >CorrectedBedmirbase_Annotated_MendellOverlapSVZ_NoYF7_reorder1_sep9_sorted.bed 
+
+#Merge entries with the same miRNA annotation based off the min of the chrom start and max of the chrom end, just use distinct miRNA names at the end, don't repeat them, give the max score and do this all based only the entries with same strand
+bedtools merge -s -c 2,3,4,5 -o min,max,distinct,max -i CorrectedBedmirbase_Annotated_MendellOverlapSVZ_NoYF7_reorder1_sep9_sorted.bed  > MergeStrandedness_SVZOverlapMendellmiRBase_Sorted_sep9.bed
+
+head MergeStrandedness_SVZOverlapMendellmiRBase_Sorted_sep9.bed
+
+
+awk '{ print $1, $2, $3, $7, $8, $4}' MergeStrandedness_SVZOverlapMendellmiRBase_Sorted_sep9.bed > Collapsed_Annotated_SVZOverlapMendellnoYF7_sep9.bed
+#Next we had to create a dictionary of miRNA accession values and what gene names they correspond to 
+#We extracted only the column containing the miR IDs
+awk '{ print $4}' Collapsed_Annotated_SVZOverlapMendellnoYF7_sep9.bed  > JustmirIDs_sep9.bed
+#We use miRBaseConverter using R to do this - documentation is here https://www.bioconductor.org/packages/release/bioc/vignettes/miRBaseConverter/inst/doc/miRBaseConverter-vignette.html
+module load R
+R
+library(miRBaseConverter)
+data<-read.table(file='JustmirIDs_sep9.bed')
+Accessions = data$x
+result1 = miRNA_AccessionToName(Accessions,targetVersion = "v22")
+write.table(result1, "file=mirbasedict.txt")
+q()
+
+#The next line of code is using python to use a dictionary created using miRbase converter to switch from accession values to actual gene names
+
+module load python
+python
+import json
+
+filename = 'mirbasedict.txt'
+commands = {}
+with open(filename) as fh:
+    for line in fh:
+        command, description = line.strip().split('	', 1)
+        commands[command] = description.strip()
+
+print(json.dumps(commands, indent=2, sort_keys=True))
+newID = str(commands.values())
+oldID = str(commands.keys())
+
+
+
+
+import re
+
+with open('COPY1_Annotated_MendellSVZOverlap_NoYF7.txt') as main, open('done.txt', 'w') as done:
+    text = main.read()
+    done.write(re.sub(r'\b\w+\b', lambda x: commands.get(x.group(), x.group()), text))
+
+
+exit()
+
+#Done.txt was then renamed to JustAnnotationsUNID_CustomRefSep10.bed
+# Here we just use the column4 of IDs and things that we call UNID.  UNID is what we originally called "1", so it's everything without a gene name now. This switch was originally done with find and replace in a text editor then deleting everything that was 1, since those had IDs and just 1 alone did not.  
+
+#We need to rename them UNID1, UNID2, UNID3, etc so they don't all have the same ID
+
+#The following code was given by CCV
+
+# read input file
+with open("JustAnnotationsUNID_CustomRefSep10.bed") as f:
+    content = f.readlines()
+
+# append number to 'UNID'
+i = 1
+for index, line in enumerate(content):
+    if line == 'UNID\n':
+        content[index] = 'UNID' + str(i) + '\n'
+        i = i + 1
+
+# write to output file
+with open('AE_primiReference_FixedAnnotation_Sep11.bed', 'w') as f:
+    for line in content:
+        f.write(line)
+
+
+#The following code is written by AE
+awk '{print $1, $2, $3, $7, $5, $6}' AE_primiReference_FixedAnnotation_Sep11.bed > AE_primiReference_FixedAnnotation1_Sep11_reorder1.bed
+
+#take out ; and replace with spaces for this command to work.  Also extract just the id column. paste back in later
+
+sed -E 's/(\w+) *\1/\1/g' spacedmirids.txt > deduplicatedids.txt
+
+paste AE_primiReference_FixedAnnotation1_Sep11_reorder.bed deduplicatedids.txt > AE_FixedAnnotation2_Sep11.bed
+
+head AE_FixedAnnotation2_Sep11.bed
+
+awk '{print $1, $2, $3, $7, $5, $6}' AE_FixedAnnotation2_Sep11.bed > AE_primiReference_FixedAnnotation2_Sep11_reorder2.bed
+
+head AE_primiReference_FixedAnnotation2_Sep11_reorder2.bed
+
+##Whenever the code starts saying AE_primiRference that means that I uploaded it to UCSC to get the columns to look nice and evenly spaced and renamed it primiReference with the date
+
+
+module load bedtools
+sort -k1,1V -k2,2n -k3,3n COPY_AE_primiReference_Sep11.bed > COPY1_AE_primiReference_Sep11.bed
+bedtools merge -d 50000 -s -c 2,3,4,5,6 -o min,max,distinct,max,distinct -i COPY1_AE_primiReference_Sep11.bed > MergedIDS_primiReference_Sep14.bed
+
+awk '{ print $1, $2, $3, $7, $8, $9}' MergedIDS_primiReference_Sep14.bed > TestFinalization_Sep14.bed
+
+#Manual edits were completed to remove entries with no miRNA overlap, rename entries with UNID but ID was found in UCSC, remove UNID from entries now IDed
+
+bedtools intersect -s -wa -a AE_primiReference_AlmostFinal_Sep14.bed -b mendell_lab.bed >FixedStrandedness_TestFinal.bed
+
+
+
+awk '!unique[$1$2$3$4$5$6]++' FixedStrandedness_TestFinal_COPY.bed > AE_primireference_Sep14.bed
+
+#The reference was uploaded to UCSC and manually UNID spots were looked up and either renamed based on what was seen or deleted.  Additionally, all spots were looked up on UCSC with the mendell lab's custom track to make sure two primiRNAs were not overlapping.  If they were, they were separated. 
+
+
+
