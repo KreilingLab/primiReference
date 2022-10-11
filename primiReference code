@@ -1,4 +1,4 @@
-#This script is property of Dr. Jill A. Kreiling and Amy E. Elias
+#This script is property of Dr. Jill A. Kreiling and Dr.Amy E. Elias
 #This script was created by Amy E. Elias with help from CCV @ Brown University and suggestions from the Brown Computational Biology Core
 #This code is not concise.  There are many areas that could be more concise through use of loops or additional options in bedtools.  This was done stepwise because Amy E. Elias was relearning a lot of coding////trying stuff out when making this reference to make sure everything checked out. This was done stepwise.
 #This script along with manual manipulation and manipulation on UCSC were used to create a primary miRNA reference to use with single-nuclei RNA-sequencing data.  This script used 15 samples (bam files) from Amy Elias' single-nuclei RNA-sequencing data set of young and old SVZ to overlap with Joshua Mendell's primary miRNA sequencing data from 6 cell lines to create a compatible reference with brain. 
@@ -11,7 +11,6 @@ module load bedops
 #The mendell_lab.bed file was downloaded off of ucsc: it is available here http://www4.utsouthwestern.edu/mendell-lab/resources.html
 #Split bam files into mapped and unmapped read bam files
 
-cd /users/aelias1/data/SVZ_SingleCell_BamFiles_premrnaalignment
 
 samtools view -b -F 4 YM1_possortedgenome.bam > YM1_mapped.bam
 samtools view -b -f 4 YM1_possortedgenome.bam > YM1_unmapped.bam
